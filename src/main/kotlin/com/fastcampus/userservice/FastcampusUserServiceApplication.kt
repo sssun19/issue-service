@@ -9,5 +9,5 @@ import org.springframework.boot.runApplication
 class FastcampusUserServiceApplication
 
 fun main(args: Array<String>) {
-    runApplication<FastcampusUserServiceApplication>(*args)
+    println("HelloWorld!")
 }
