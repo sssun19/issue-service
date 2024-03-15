@@ -16,7 +16,7 @@ import reactor.kotlin.core.publisher.toMono
 class GlobalExceptionHandler(private val objectMapper: ObjectMapper) : ErrorWebExceptionHandler {
 
     private val logger = KotlinLogging.logger {  }
-    override fun handle(exchange: ServerWebEgxchange, ex: Throwable): Mono<Void> = mono {
+    override fun handle(exchange: ServerWebExchange, ex: Throwable): Mono<Void> = mono {
 
         logger.error { ex.message }
 
