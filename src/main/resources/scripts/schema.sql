@@ -1,5 +1,6 @@
 -- 초기 세팅
 DROP TABLE IF EXISTS users;
+
 CREATE TABLE users
 (
     id          bigint NOT NULL AUTO_INCREMENT,

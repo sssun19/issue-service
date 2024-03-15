@@ -14,6 +14,11 @@ class R2DBCConfig {
     fun init(connectionFactory: ConnectionFactory) =
         ConnectionFactoryInitializer().apply {
             setConnectionFactory(connectionFactory)
-            setDatabasePopulator(ResourceDatabasePopulator(ClassPathResource("scripts/schema.sql")))
+            setDatabasePopulator(
+                ResourceDatabasePopulator(
+                    ClassPathResource("scripts/schema.sql")
+                )
+            )
         }
+
 }
