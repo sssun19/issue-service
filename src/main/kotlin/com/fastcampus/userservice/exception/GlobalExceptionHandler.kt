@@ -15,11 +15,10 @@ import reactor.kotlin.core.publisher.toMono
 @Configuration
 class GlobalExceptionHandler(private val objectMapper: ObjectMapper) : ErrorWebExceptionHandler {
 
-    private val logger = KotlinLogging.logger {}
-
+    private val logger = KotlinLogging.logger {  }
     override fun handle(exchange: ServerWebExchange, ex: Throwable): Mono<Void> = mono {
 
-        logger.error { ex.printStackTrace() }
+        logger.error { ex.message }
 
         val errorResponse = if (ex is ServerException) {
             ErrorResponse(code = ex.code, message = ex.message)
@@ -27,14 +26,14 @@ class GlobalExceptionHandler(private val objectMapper: ObjectMapper) : ErrorWebE
             ErrorResponse(code = 500, message = "Internal Server Error")
         }
 
-        with(exchange.response) {
+        with(exchange.response){
             statusCode = HttpStatus.OK
             headers.contentType = MediaType.APPLICATION_JSON
 
             val dataBuffer = bufferFactory().wrap(objectMapper.writeValueAsBytes(errorResponse))
             writeWith(dataBuffer.toMono()).awaitSingle()
         }
-    }
 
+    }
 
 }
