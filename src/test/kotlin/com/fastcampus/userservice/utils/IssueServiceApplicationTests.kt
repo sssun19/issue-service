@@ -1,4 +1,4 @@
-package com.fastcampus.issueservice
+package com.fastcampus.userservice.utils
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest

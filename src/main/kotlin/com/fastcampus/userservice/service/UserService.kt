@@ -4,10 +4,10 @@ import com.auth0.jwt.interfaces.DecodedJWT
 import com.fastcampus.userservice.config.JWTProperties
 import com.fastcampus.userservice.domain.entity.User
 import com.fastcampus.userservice.domain.repository.UserRepository
-import com.fastcampus.userservice.exception.InvalidJwtTokenException
-import com.fastcampus.userservice.exception.PasswordNotMatchedException
-import com.fastcampus.userservice.exception.UserExistsException
-import com.fastcampus.userservice.exception.UserNotFoundException
+//import com.fastcampus.userservice.exception.InvalidJwtTokenExceptionException
+//import com.fastcampus.userservice.exception.PasswordNotMatchedException
+//import com.fastcampus.userservice.exception.UserExistsException
+//import com.fastcampus.userservice.exception.UserNotFoundException
 import com.fastcampus.userservice.model.SignInRequest
 import com.fastcampus.userservice.model.SignInResponse
 import com.fastcampus.userservice.model.SignUpRequest
@@ -43,6 +43,10 @@ class UserService(
 
     }
 
+    private fun UserExistsException(): Throwable {
+        return Exception()
+    }
+
     suspend fun signIn(signInRequest: SignInRequest): SignInResponse {
         return with(userRepository.findByEmail(signInRequest.email) ?: throw UserNotFoundException()) {
             val verified = BCryptUtils.verify(signInRequest.password, password)
@@ -53,7 +57,7 @@ class UserService(
             val jwtClaim = JWTClaim(
                 userId = id!!,
                 email = email,
-                profileUrl = profileUrl,
+                profileUrl = profileUrl!!,
                 username = username
             )
 
@@ -69,6 +73,14 @@ class UserService(
         }
     }
 
+    private fun PasswordNotMatchedException(): Throwable {
+        return Exception()
+    }
+
+    private fun UserNotFoundException(): Throwable {
+        return Exception()
+    }
+
     suspend fun logout(token: String) {
         cacheManager.awaitEvict(token)
     }
@@ -82,6 +94,10 @@ class UserService(
             get(userId)
         }
         return cachedUser
+    }
+
+    private fun InvalidJwtTokenException(): Throwable {
+        return Exception()
     }
 
     suspend fun get(userId: Long): User {
