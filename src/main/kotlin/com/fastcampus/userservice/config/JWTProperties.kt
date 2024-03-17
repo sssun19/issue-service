@@ -3,7 +3,7 @@ package com.fastcampus.userservice.config
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
 
-@ConstructorBinding
+@ConstructorBinding // 설정 클래스의 생성자 값을 추가
 @ConfigurationProperties(prefix = "jwt")
 data class JWTProperties(
     val issuer: String,
