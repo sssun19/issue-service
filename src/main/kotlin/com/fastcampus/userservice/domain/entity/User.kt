@@ -32,4 +32,5 @@ data class User(
     @LastModifiedDate
     @Column("updated_at")
     val updatedAt: LocalDateTime? = null,
+
 )
