@@ -37,6 +37,6 @@ object JWTUtils {
 data class JWTClaim(
     val userId: Long,
     val email: String,
-    val profileUrl: String,
+    val profileUrl: String? = null,
     val username: String,
 )

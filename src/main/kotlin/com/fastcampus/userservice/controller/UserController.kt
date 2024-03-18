@@ -21,4 +21,9 @@ class UserController(
         userService.signUp(request)
     }
 
+    @PostMapping("/signin")
+    suspend fun signIn(@RequestBody singInRequest: SignInRequest) :SignInResponse {
+        return userService.signIn(singInRequest)
+    }
+
 }
