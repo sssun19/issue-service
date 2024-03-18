@@ -26,4 +26,10 @@ class UserController(
         return userService.signIn(singInRequest)
     }
 
+    @DeleteMapping("/logout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    suspend fun logout(@AuthToken token: String) { //@AuthToken annotation 이 있는 경우 HandlerMethodArgumentResolver 에서 token 객체에 넣어주는 기능 구현.
+        return userService.logout(token)
+    }
+
 }

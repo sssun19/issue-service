@@ -20,7 +20,10 @@ import com.fastcampus.userservice.utils.BCryptUtils
 import com.fastcampus.userservice.utils.JWTClaim
 import com.fastcampus.userservice.utils.JWTUtils
 import jdk.jshell.spi.ExecutionControl.UserException
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.ResponseStatus
 import java.time.Duration
 
 @Service
@@ -74,6 +77,12 @@ class UserService(
                 token = token,
             )
         }
+
+    }
+
+    suspend fun logout(token: String) {
+
+        cacheManager.awaitEvict(token)
 
     }
 
