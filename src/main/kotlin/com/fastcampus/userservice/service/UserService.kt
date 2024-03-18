@@ -9,8 +9,8 @@ import com.fastcampus.userservice.exception.UserExistsException
 //import com.fastcampus.userservice.exception.PasswordNotMatchedException
 //import com.fastcampus.userservice.exception.UserExistsException
 //import com.fastcampus.userservice.exception.UserNotFoundException
-import com.fastcampus.userservice.model.SignInRequest
-import com.fastcampus.userservice.model.SignInResponse
+//import com.fastcampus.userservice.model.SignInRequest
+//import com.fastcampus.userservice.model.SignInResponse
 import com.fastcampus.userservice.model.SignUpRequest
 import com.fastcampus.userservice.utils.BCryptUtils
 import com.fastcampus.userservice.utils.JWTClaim
@@ -32,9 +32,10 @@ class UserService(
 
             val user = User(
                 email = email,
-                password = password, // 요청 들어온 비밀번호 그대로 받으면 보안 취약점 발생. 암호화 필수.
+                password = BCryptUtils.hash(password), // 요청 들어온 비밀번호 그대로 받으면 보안 취약점 발생. BCrypt로 암호화 필수.
                 username = username
             )
+            userRepository.save(user)
         }
     }
 
