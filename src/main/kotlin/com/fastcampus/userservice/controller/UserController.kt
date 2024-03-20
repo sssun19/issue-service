@@ -39,4 +39,10 @@ class UserController(
         return MeResponse(userService.getByToken(token))
     }
 
+    @GetMapping("/{userId}/username")
+    suspend fun getUsername(@PathVariable userId: Long) : Map<String, String> {
+        return mapOf("reporter" to userService.get(userId).username)
+
+    }
+
 }
