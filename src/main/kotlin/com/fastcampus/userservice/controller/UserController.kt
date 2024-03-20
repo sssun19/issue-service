@@ -32,4 +32,11 @@ class UserController(
         return userService.logout(token)
     }
 
+    @GetMapping("/me") // ${userId} path variable 로 아이디를 받지 않는 이유는 해커가 아이디를 유추하기만 하면 상세조회 페이지로 바로 넘어갈 수 있는 위험성 때문에.
+    suspend fun get(
+        @AuthToken token: String,
+    ) :MeResponse {
+        return MeResponse(userService.getByToken(token))
+    }
+
 }

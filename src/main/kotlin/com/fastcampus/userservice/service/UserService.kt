@@ -86,4 +86,11 @@ class UserService(
 
     }
 
+    fun getByToken(token: String): User {
+
+        val decodedJWT = JWTUtils.decode(token, jwtProperties.secret, jwtProperties.issuer)
+
+        cacheManager.awaitGetOrPut(key = token, ttl = CACHE_TTL)
+    }
+
 }
