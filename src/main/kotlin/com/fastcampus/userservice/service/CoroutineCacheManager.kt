@@ -22,11 +22,11 @@ class CoroutineCacheManager<T> {
         key: String,
         ttl: Duration?= Duration.ofMinutes(5),
         supplier : suspend () -> T,
-    ) {
+    ) : T {
         val now = Instant.now()
         val cacheWrapper = localCache[key]
 
-        if (cacheWrapper == null) {
+        val cached = if (cacheWrapper == null) {
             CacheWrapper(cached = supplier(), ttl = now.plusMillis(ttl!!.toMillis())).also {
                 localCache[key] = it
             }
@@ -36,10 +36,14 @@ class CoroutineCacheManager<T> {
             localCache.remove(key)
             CacheWrapper(cached = supplier(), ttl = now.plusMillis(ttl!!.toMillis())).also {
                 localCache[key] = it
+            }
+
+        } else {
+            cacheWrapper
         }
 
-        }
-
+        checkNotNull(cached.cached)
+        return cached.cached
     }
 
 
