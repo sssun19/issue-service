@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.codec.multipart.FilePart
 import org.springframework.web.bind.annotation.*
+import reactor.kotlin.core.publisher.toMono
 import java.io.File
 
 @RestController
@@ -42,6 +43,31 @@ class UserController(
     @GetMapping("/{userId}/username")
     suspend fun getUsername(@PathVariable userId: Long) : Map<String, String> {
         return mapOf("reporter" to userService.get(userId).username)
+    }
+
+    @PostMapping("/{id}", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE]) // 이미지를 포함하여 서버에 요청
+    suspend fun edit(
+        @PathVariable id: Long,
+        @ModelAttribute request: UserEditRequest, // content type 이 multipart form data 라서 modelAttribute
+        @AuthToken token: String,
+        @RequestPart("profileUrl") filePart: FilePart,
+    ) {
+
+        val orgFilename = filePart.filename() // 파일 업로드를 시도한 실제 파일명
+        var filename: String? = null
+
+        if (orgFilename.isNotEmpty()) {
+            // abc.jpg < 콤마 뒤의 +1 인덱스 위치 멤버부터 가져오는 방법 (확장자명)
+            val ext = orgFilename.substring(orgFilename.lastIndexOf(".") +1)
+            filename = "${id}.${ext}" // 1.jpg, 3.png,...
+
+            // /resources/images/1.jpg 을 ClassPathResource 메서드로 탐색
+            val file = File(ClassPathResource("/images/").file, filename)
+            filePart.transferTo(file).awaitSingleOrNull()
+
+        }
+
+        userService.edit(token, request.username, filename)
 
     }
 
