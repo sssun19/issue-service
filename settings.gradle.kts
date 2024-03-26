@@ -1,3 +1,3 @@
 rootProject.name = "issue-service"
-include("issue-services")
+include("issueservice")
 include("user-services")
