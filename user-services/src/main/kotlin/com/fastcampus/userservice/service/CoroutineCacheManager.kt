@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap
 class CoroutineCacheManager<T> {
 
     private val localCache = ConcurrentHashMap<String, CacheWrapper<T>>()
+    // 실무에서는 로컬 캐시가 아닌 레디스와 같은 캐시 매니저를 연동하는 경우가 많다.
 
     suspend fun awaitPut(key: String, value: T, ttl: Duration) {
         localCache[key] = CacheWrapper(cached = value, Instant.now().plusMillis(ttl.toMillis()))
