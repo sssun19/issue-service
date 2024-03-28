@@ -27,14 +27,17 @@ class WebConfig(
         }
     }
 
+
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+
         registry.addResourceHandler("/**")
             .addResourceLocations(
                 "classpath:/META-INF/resources/",
                 "classpath:/resources/",
                 "classpath:/static/",
-                "classpath:/public/"
+                "classpath:/public/",
             )
+
     }
 }
 
