@@ -6,7 +6,7 @@
 
 - 의존성 추가
 
-![image](https://github.com/sssun19/issue-service/assets/125242481/9f43936a-454c-4c69-b9d2-51aca6f631eb)
+    ![image](https://github.com/sssun19/issue-service/assets/125242481/9f43936a-454c-4c69-b9d2-51aca6f631eb)
 
 - JWTClaim 과 JWTProperties<br/>
 
@@ -58,35 +58,35 @@
 #### ✨issue-service<br/>
 * IssueController
 
-```
-@PostMapping
-fun create(
-    authUser: AuthUser,
-    @RequestBody request: IssueRequest,
-) = issueService.create(authUser.userId, request)
-```
+    ```
+    @PostMapping
+    fun create(
+        authUser: AuthUser,
+        @RequestBody request: IssueRequest,
+    ) = issueService.create(authUser.userId, request)
+    ```
 
 * IssueService
 
-```
-@Transactional
-fun create(userId: Long, request: IssueRequest) : IssueResponse {
+    ```
+    @Transactional
+    fun create(userId: Long, request: IssueRequest) : IssueResponse {
+    
+        val issue = Issue(
+            summary = request.summary,
+            description = request.description,
+            userId = userId,
+            type = request.type,
+            priority = request.priority,
+            status = request.status,
+        )
+        return IssueResponse(issueRepository.save(issue))
+    }
+    ```
 
-    val issue = Issue(
-        summary = request.summary,
-        description = request.description,
-        userId = userId,
-        type = request.type,
-        priority = request.priority,
-        status = request.status,
-    )
-    return IssueResponse(issueRepository.save(issue))
-}
-```
-
-![image](https://github.com/sssun19/issue-service/assets/125242481/a78cf4d3-4247-4665-bb53-6e491ffa90f2)
-
-> invoke 함수로 Issue 객체를 바로 전달. 댓글은 내림차순 정렬하여 map 으로 관리
-
-![image](https://github.com/sssun19/issue-service/assets/125242481/c9378bc6-b529-4647-a3cc-02960e6f178b)
+    ![image](https://github.com/sssun19/issue-service/assets/125242481/a78cf4d3-4247-4665-bb53-6e491ffa90f2)
+    
+    > invoke 함수로 Issue 객체를 바로 전달. 댓글은 내림차순 정렬하여 map 으로 관리
+    
+    ![image](https://github.com/sssun19/issue-service/assets/125242481/c9378bc6-b529-4647-a3cc-02960e6f178b)
 
