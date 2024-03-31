@@ -135,3 +135,33 @@
 
 * UserService (로그인 api)
   
+    ```
+    suspend fun signIn(signInRequest: SignInRequest): SignInResponse {
+        return with(userRepository.findByEmail(signInRequest.email) ?: throw UserNotFoundException()) {
+            val verified = BCryptUtils.verify(signInRequest.password, password)
+
+            if(!verified) {
+                throw PasswordNotMatchedException()
+            }
+
+            val jwtClaim = JWTClaim(
+                userId = id!!,
+                email = email,
+                profileUrl = profileUrl,
+                username = username
+            )
+
+            val token = JWTUtils.createToken(jwtClaim, jwtProperties)
+
+            cacheManager.awaitPut(key = token, value = this, ttl = CACHE_TTL)
+
+            SignInResponse(
+                email = email,
+                username = username,
+                token = token,
+            )
+        }
+    }
+    ```
+    💁 BCryptUtils 의 verify 메서드로 일반 비밀번호 문자와 해시된 문자열이 일치한지 검증한다. <br/>
+    💁 비밀번호 검증이 완료되면 JWTClaim 객체를 생성하고 token 을 생성한다. 캐시 매니저에 유저 정보를 저장고 응답을 내려준다.
