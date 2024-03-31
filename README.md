@@ -90,3 +90,48 @@
     
     ![image](https://github.com/sssun19/issue-service/assets/125242481/c9378bc6-b529-4647-a3cc-02960e6f178b)
 
+#### ✨user-service<br/>
+* UserController
+
+    ```
+    @RestController
+    @RequestMapping("/api/v1/users")
+    class UserController(
+        private val userService: UserService,
+    ) {
+        @PostMapping("/signup")
+        suspend fun signUp(@RequestBody request: SignUpRequest) {
+            userService.signUp(request)
+        }
+    }
+    ```
+
+* UserService (회원가입 api)
+
+    ```
+    suspend fun signUp(signUpRequest: SignUpRequest) {
+        with(signUpRequest) {
+            userRepository.findByEmail(email)?.let {
+                throw UserExistsException()
+            }
+
+            val user = User(
+                email = email,
+                password = BCryptUtils.hash(password), // 요청 들어온 비밀번호 그대로 받으면 보안 취약점 발생. BCrypt로 암호화 필수.
+                username = username
+            )
+            userRepository.save(user)
+        }
+    }
+    ```
+    💁 suspend 키워드는 비동기 방식을 수행할 때 사용하는 키워드이며 suspend 메서드를 사용하는 함수도 suspend 키워드가 붙어야 한다.<br/>
+    💁 코틀린의 스코프 함수 let 을 이용해 signUpRequest 객체의 프로퍼티에 쉽게 접근할 수 있다.<br/>
+
+* BCryptUtils <br/>
+
+    ![image](https://github.com/sssun19/issue-service/assets/125242481/de54851b-5ae1-45b3-afa4-59843b479ce4) <br/>
+    💁 BCrypt 를 사용해 매개변수로 받은 비밀번호를 해시된 문자열로 반환한다.
+
+
+* UserService (로그인 api)
+  
