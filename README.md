@@ -165,3 +165,15 @@
     ```
     💁 BCryptUtils 의 verify 메서드로 일반 비밀번호 문자와 해시된 문자열이 일치한지 검증한다. <br/>
     💁 비밀번호 검증이 완료되면 JWTClaim 객체를 생성하고 token 을 생성한다. 캐시 매니저에 유저 정보를 저장하고 응답을 내려준다.
+
+* CoroutineCacheManager<T>
+
+    ```
+    private val localCache = ConcurrentHashMap<String, CacheWrapper<T>>()
+    // 실무에서는 로컬 캐시가 아닌 redis 와 같은 캐시 매니저를 연동하는 경우가 많다.
+
+    suspend fun awaitPut(key: String, value: T, ttl: Duration) {
+        localCache[key] = CacheWrapper(cached = value, Instant.now().plusMillis(ttl.toMillis()))
+    }
+    ```
+    💁 HashMap의 key(위에서는 token)를 이용해 생성한 JWTClaim 을 캐시에 저장하고 만료 시간을 설정. <br/>
