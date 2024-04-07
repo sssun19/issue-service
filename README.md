@@ -177,3 +177,10 @@
     }
     ```
     💁 HashMap의 key(위에서는 token)를 이용해 생성한 JWTClaim 을 캐시에 저장하고 만료 시간을 설정. <br/>
+
+    ```
+    suspend fun awaitEvict(key: String) {
+        localCache.remove(key)
+    }
+    ```
+    💁 캐시에서 토큰 삭제하는 코드 <br/>
