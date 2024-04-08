@@ -184,3 +184,24 @@
     }
     ```
     💁 캐시에서 토큰 삭제하는 코드 <br/>
+
+* ImageController <br/>
+    ```
+    @Controller // json 이 아닌 이미지 경로를 응답하는 컨트롤러이기 때문에 RestController 가 아닌 일반 Controller annotation을 사용
+    @RequestMapping("/images")
+    class ImageController {
+
+        @GetMapping("{filename}")
+        fun image(@PathVariable filename: String) : ResponseEntity<InputStreamResource> {
+            val ext = filename.substring(filename.lastIndexOf("." +1))
+            val file = File(ClassPathResource("/images/").file, filename)
+
+            // images/jpg, images/png 등 업로드 확장자에 따라 헤더에 콘텐트 타입으로 응답을 내려준다.
+            return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, "images/$ext")
+                .body(InputStreamResource(FileInputStream(file)))
+            
+        }
+    }
+    ```
+    💁 변수 ext 는 파일의 확장자를 할당한다.
